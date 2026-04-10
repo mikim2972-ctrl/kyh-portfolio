@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김유현 - 포트폴리오</title>
+    <!-- Pretendard Font for Korean/English -->
+    <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="cursor-effect" id="cursor"></div>
+
+    <nav class="navbar">
+        <a href="#" class="logo">KYH</a>
+        <div class="nav-links">
+            <a href="#about" class="nav-item">About</a>
+            <a href="#portfolio" class="nav-item">Portfolio</a>
+            <a href="#contact" class="nav-item">Contact</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="about" class="hero">
+            <div class="hero-content">
+                <h1 class="title">안녕하세요,<br><span>김유현</span> 입니다.</h1>
+                <p class="subtitle">
+                    세상과 소통하며 가치를 만들어가는 크리에이터입니다.<br>
+                    영상, 글, 그리고 다양한 콘텐츠를 통해 저만의 이야기를 전달합니다.
+                </p>
+            </div>
+
+            <div class="profile-wrapper">
+                <!-- 나중에 여기에 본인 프로필 사진을 넣으시면 됩니다 -->
+                <img src="profile.png" alt="김유현 프로필 사진" class="profile-image">
+                <div class="profile-glow"></div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="links-section">
+            <h2 class="section-title">My Work</h2>
+            <div class="links-grid">
+                <a href="videos.html" class="link-card">
+                    <span class="link-icon">🎥</span>
+                    <div class="link-text">
+                        <h3>Watch</h3>
+                        <p>영상 포트폴리오</p>
+                    </div>
+                    <span class="arrow">→</span>
+                </a>
+
+                <a href="https://blog.naver.com/cool89kr" target="_blank" rel="noopener noreferrer" class="link-card">
+                    <span class="link-icon">✍️</span>
+                    <div class="link-text">
+                        <h3>Read</h3>
+                        <p>블로그 방문하기</p>
+                    </div>
+                    <span class="arrow">→</span>
+                </a>
+
+                <a href="https://www.instagram.com/luvhyun89" target="_blank" rel="noopener noreferrer"
+                    class="link-card">
+                    <span class="link-icon">📱</span>
+                    <div class="link-text">
+                        <h3>Connect</h3>
+                        <p>인스타그램 팔로우</p>
+                    </div>
+                    <span class="arrow">→</span>
+                </a>
+            </div>
+        </section>
+        <section id="contact" class="contact-section">
+            <h2 class="section-title">Get in Touch</h2>
+            <div class="contact-card">
+                <div class="contact-info">
+                    <h3>연락을 기다립니다!</h3>
+                    <p>협업 문의, 커피챗 등 언제든 편하게 이메일로 연락 주세요.</p>
+                </div>
+                <div class="contact-action">
+                    <a href="mailto:cool89kr@naver.com" class="email-btn">
+                        <span class="email-icon">✉️</span>
+                        이메일 보내기
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Kim Yuhyun. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
