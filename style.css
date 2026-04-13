@@ -22,6 +22,11 @@ body {
     overflow-x: hidden;
 }
 
+/* Utility */
+.mobile-br {
+    display: none;
+}
+
 /* Custom Cursor */
 .cursor-effect {
     position: fixed;
@@ -429,6 +434,10 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .mobile-br {
+        display: block;
+    }
+
     .hero {
         flex-direction: column;
         text-align: center;
