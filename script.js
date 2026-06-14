@@ -171,9 +171,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Custom cursor movement
+    // Custom cursor movement & Scroll hide logic
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+        if (cursor) {
+            cursor.classList.add('cursor-hidden');
+        }
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            // Keep hidden while stationary after scroll
+        }, 100);
+    });
+
     document.addEventListener('mousemove', (e) => {
         if (cursor) {
+            cursor.classList.remove('cursor-hidden');
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         }
