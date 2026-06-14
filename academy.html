@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학원비 결제 매니저</title>
+    <style>
+        :root { --primary-color: #6c5ce7; --bg-color: #f9f9fb; }
+        body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: var(--primary-color); margin-bottom: 5px; }
+        #currentMonth { text-align: center; font-weight: bold; margin-bottom: 20px; color: #333; }
+        
+        .academy-list { list-style: none; padding: 0; }
+        .academy-item { display: flex; align-items: center; justify-content: space-between; padding: 15px; border-bottom: 1px solid #eee; }
+        .academy-info { flex-grow: 1; margin-left: 10px; }
+        .academy-info strong { display: block; font-size: 1.1em; }
+        .academy-info span { font-size: 0.85em; color: #666; }
+        
+        .total-section { text-align: right; margin-top: 20px; font-weight: bold; font-size: 1.1em; color: var(--primary-color); padding: 10px; border-top: 2px solid var(--primary-color); }
+        .history-btn { display: block; width: 100%; margin-top: 10px; padding: 8px; background: none; border: 1px solid #ddd; border-radius: 5px; color: #888; cursor: pointer; font-size: 0.9em; }
+
+        /* 모달 스타일 */
+        #modalOverlay, #historyOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10; }
+        .modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 350px; max-height: 80vh; overflow-y: auto; }
+        .modal-content input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        
+        .btn-add { display: block; width: 60px; height: 60px; background: var(--primary-color); color: white; border: none; border-radius: 50%; font-size: 35px; margin: 20px auto; cursor: pointer; box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3); }
+        .preview-img { width: 45px; height: 45px; object-fit: cover; border-radius: 8px; margin-left: 10px; border: 1px solid #eee; }
+        .delete-btn { color: #ff7675; cursor: pointer; font-size: 1.2em; margin-left: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🏫 학원비 결제 관리</h2>
+    <div id="currentMonth"></div>
+    
+    <ul id="academyList" class="academy-list"></ul>
+    
+    <div class="total-section">이번 달 총액: <span id="totalPrice">0</span>원</div>
+    <button class="history-btn" onclick="openHistory()">📜 지난 결제 내역 보기</button>
+    <button class="btn-add" onclick="openModal()">+</button>
+</div>
+
+<div id="modalOverlay" onclick="closeModal('modalOverlay')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3>학원 등록</h3>
+        <input type="text" id="name" placeholder="학원 이름">
+        <input type="number" id="price" placeholder="금액 (숫자만)">
+        <input type="text" id="payDay" placeholder="결제일 (예: 매월 5일)" onkeyup="if(window.event.keyCode==13){addAcademy()}">
+        <button onclick="addAcademy()" style="width:100%; padding:12px; background:var(--primary-color); color:white; border:none; border-radius:8px; font-weight:bold;">추가하기</button>
+    </div>
+</div>
+
+<div id="historyOverlay" onclick="closeModal('historyOverlay')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3>📜 지난 결제 기록</h3>
+        <div id="historyContent" style="font-size: 0.9em; line-height: 1.6;"></div>
+        <button onclick="closeModal('historyOverlay')" style="width:100%; margin-top:20px; padding:10px; border:none; border-radius:8px;">닫기</button>
+    </div>
+</div>
+
+<script>
+    let academies = JSON.parse(localStorage.getItem('academies')) || [];
+    let history = JSON.parse(localStorage.getItem('payHistory')) || {};
+    const today = new Date();
+    const currentYearMonth = `${today.getFullYear()}-${today.getMonth() + 1}`;
+
+    function init() {
+        document.getElementById('currentMonth').innerText = `📅 ${today.getMonth() + 1}월 현황`;
+        checkMonthlyReset();
+        render();
+    }
+
+    // 매달 리셋 시 기존 데이터를 히스토리에 저장
+    function checkMonthlyReset() {
+        const lastResetDate = localStorage.getItem('lastResetDate');
+        if (lastResetDate && lastResetDate !== currentYearMonth) {
+            // 1. 현재 데이터 히스토리에 복사 (이미지 포함)
+            history[lastResetDate] = [...academies];
+            localStorage.setItem('payHistory', JSON.stringify(history));
+
+            // 2. 현재 화면 데이터 리셋 (항목은 남기고 상태만)
+            academies = academies.map(item => ({ ...item, paid: false, image: null }));
+            saveToStorage();
+        }
+        localStorage.setItem('lastResetDate', currentYearMonth);
+    }
+
+    function addAcademy() {
+        const name = document.getElementById('name').value;
+        const price = parseInt(document.getElementById('price').value);
+        const payDay = document.getElementById('payDay').value;
+        if(name && price) {
+            academies.push({ id: Date.now(), name, price, payDay, paid: false, image: null });
+            saveAndRender();
+            closeModal('modalOverlay');
+            document.getElementById('name').value = ''; document.getElementById('price').value = ''; document.getElementById('payDay').value = '';
+        }
+    }
+
+    function deleteAcademy(id) {
+        if(confirm("이 학원을 삭제할까요?")) {
+            academies = academies.filter(item => item.id !== id);
+            saveAndRender();
+        }
+    }
+
+    function togglePaid(id) {
+        academies = academies.map(item => item.id === id ? { ...item, paid: !item.paid } : item);
+        saveAndRender();
+    }
+
+    function handleImage(id, event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            academies = academies.map(item => item.id === id ? { ...item, image: e.target.result, paid: true } : item);
+            saveAndRender();
+        };
+        if(file) reader.readAsDataURL(file);
+    }
+
+    function render() {
+        const listEl = document.getElementById('academyList');
+        let total = 0;
+        listEl.innerHTML = '';
+        academies.forEach(item => {
+            total += item.price;
+            const li = document.createElement('li');
+            li.className = 'academy-item';
+            li.innerHTML = `
+                <input type="checkbox" ${item.paid ? 'checked' : ''} onclick="togglePaid(${item.id})">
+                <div class="academy-info" style="${item.paid ? 'color:#bbb; text-decoration:line-through;' : ''}">
+                    <strong>${item.name}</strong><span>${item.payDay} | ${item.price.toLocaleString()}원</span>
+                </div>
+                <input type="file" id="file-${item.id}" style="display:none" onchange="handleImage(${item.id}, event)" accept="image/*">
+                <label for="file-${item.id}">
+                    ${item.image ? `<img src="${item.image}" class="preview-img">` : '<span style="font-size:24px; cursor:pointer;">📸</span>'}
+                </label>
+                <span class="delete-btn" onclick="deleteAcademy(${item.id})">✕</span>
+            `;
+            listEl.appendChild(li);
+        });
+        document.getElementById('totalPrice').innerText = total.toLocaleString();
+    }
+
+    function openHistory() {
+        const content = document.getElementById('historyContent');
+        content.innerHTML = '';
+        const keys = Object.keys(history).reverse();
+        if (keys.length === 0) content.innerHTML = '<p>아직 기록된 과거 내역이 없습니다.</p>';
+        keys.forEach(date => {
+            const items = history[date];
+            let html = `<div style="margin-bottom:20px; border-bottom:1px dashed #ccc; padding-bottom:10px;">
+                        <strong>📍 ${date}</strong><br>`;
+            items.forEach(item => {
+                html += `· ${item.name}: ${item.paid ? '✅ 완료' : '❌ 미납'} (${item.price.toLocaleString()}원)<br>`;
+            });
+            html += `</div>`;
+            content.innerHTML += html;
+        });
+        document.getElementById('historyOverlay').style.display = 'block';
+    }
+
+    function saveToStorage() { localStorage.setItem('academies', JSON.stringify(academies)); }
+    function saveAndRender() { saveToStorage(); render(); }
+    function openModal() { document.getElementById('modalOverlay').style.display = 'block'; document.getElementById('name').focus(); }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    init();
+</script>
+</body>
+</html>

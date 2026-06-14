@@ -5,99 +5,379 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>김유현 - 포트폴리오</title>
-    <!-- Pretendard Font for Korean/English -->
     <link rel="stylesheet" as="style" crossorigin
         href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="lang-ko">
     <div class="cursor-effect" id="cursor"></div>
+
+    <!-- 우측 스크롤 인디케이터 바 -->
+    <div class="scroll-progress-ticks" id="scroll-progress-ticks">
+        <div class="tick" data-index="0"></div>
+        <div class="tick" data-index="1"></div>
+        <div class="tick" data-index="2"></div>
+        <div class="tick" data-index="3"></div>
+        <div class="tick" data-index="4"></div>
+        <div class="tick" data-index="5"></div>
+        <div class="tick" data-index="6"></div>
+        <div class="tick" data-index="7"></div>
+        <div class="tick" data-index="8"></div>
+        <div class="tick" data-index="9"></div>
+    </div>
 
     <nav class="navbar">
         <a href="#" class="logo">KYH</a>
         <div class="nav-links">
             <a href="#about" class="nav-item">About</a>
+            <a href="#about-me" class="nav-item">About Me</a>
             <a href="#portfolio" class="nav-item">Portfolio</a>
             <a href="#contact" class="nav-item">Contact</a>
+        </div>
+        <div class="lang-selector">
+            <button class="lang-btn active" data-lang="ko">🇰🇷</button>
+            <button class="lang-btn" data-lang="en">🇺🇸</button>
+            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle theme">
+                <svg class="theme-icon moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                <svg class="theme-icon sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            </button>
         </div>
     </nav>
 
     <main class="container">
         <section id="about" class="hero">
             <div class="hero-content">
-                <h1 class="title rotator-container">
-                    <span id="typed-greeting"
-                        style="display:inline-block; min-height: 100px;">안녕하세요,<br><span>김유현</span> 입니다.</span>
+                <h1 class="title">
+                    <span id="typed-greeting">안녕하세요,<br><span>김유현</span> 입니다.</span>
                 </h1>
-                <p class="subtitle">
+                <p class="subtitle lang-ko">
                     세상과 소통하며 가치를 만들어가는 <br class="mobile-br">크리에이터입니다.<br>
                     영상, 글, 그리고 다양한 콘텐츠를 통해 <br class="mobile-br">저만의 이야기를 전달합니다.
                 </p>
+                <p class="subtitle lang-en">
+                    A creator who communicates with the world and creates value.<br>
+                    I tell my own story through video, writing, and various content.
+                </p>
             </div>
-
             <div class="profile-wrapper">
-                <!-- 나중에 여기에 본인 프로필 사진을 넣으시면 됩니다 -->
                 <img src="profile.png" alt="김유현 프로필 사진" class="profile-image">
                 <div class="profile-glow"></div>
+            </div>
+        </section>
+
+        <section id="about-me" class="about-section">
+            <h2 class="section-title">
+                <span class="lang-ko">About Me</span>
+                <span class="lang-en">About Me</span>
+            </h2>
+            
+            <!-- 탭 네비게이션 -->
+            <div class="about-tabs-nav reveal">
+                <button class="tab-btn active" data-tab="experience">
+                    <span class="lang-ko">💼 경력</span>
+                    <span class="lang-en">💼 Experience</span>
+                </button>
+                <button class="tab-btn" data-tab="education">
+                    <span class="lang-ko">🎓 수료과정 & 자격증</span>
+                    <span class="lang-en">🎓 Courses & Certificates</span>
+                </button>
+                <button class="tab-btn" data-tab="skills">
+                    <span class="lang-ko">🛠 보유 기술</span>
+                    <span class="lang-en">🛠 Skills</span>
+                </button>
+            </div>
+
+            <!-- 단일 탭 컨테이너 (Glassmorphism 카드) -->
+            <div class="about-card reveal tab-card-container">
+                <!-- 1. 경력 탭 패널 (기본 활성) -->
+                <div class="tab-panel active" id="experience">
+                    <div class="experience-list">
+                        <!-- Item 1 (준비 중 / 가장 최근) -->
+                        <div class="exp-item">
+                            <div class="exp-meta">
+                                <span class="exp-tag current">준비 중</span>
+                                <span class="exp-date lang-ko">가장 최근</span>
+                                <span class="exp-date lang-en">Most Recent</span>
+                            </div>
+                            <div class="exp-body">
+                                <h4>
+                                    <span class="lang-ko">동화책 제작 강사 활동 준비 중</span>
+                                    <span class="lang-en">Preparing as a Storybook Instructor</span>
+                                </h4>
+                                <p class="lang-ko">"AI 콘텐츠 제작 경험을 바탕으로 향후 어린이 및 학부모 대상 동화책 제작 교육 분야로 활동 범위를 확장할 계획입니다."</p>
+                                <p class="lang-en">"Planning to expand my career scope into storybook creation education for children and parents based on AI content production experience."</p>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 (프로젝트) -->
+                        <div class="exp-item">
+                            <div class="exp-meta">
+                                <span class="exp-tag project">프로젝트</span>
+                                <span class="exp-date lang-ko">제작 기간 3일</span>
+                                <span class="exp-date lang-en">3 Days Production</span>
+                            </div>
+                            <div class="exp-body">
+                                <h4>
+                                    <span class="lang-ko">AI 그림 동화책 제작 프로젝트</span>
+                                    <span class="lang-en">AI Illustrated Storybook Project</span>
+                                </h4>
+                                <p class="lang-ko">"실제 저희 가족의 이야기를 바탕으로 AI를 활용한 그림 동화책을 기획·제작·발행하였습니다."</p>
+                                <p class="lang-en">"Planned, created, and published an illustrated storybook based on the real story of our family using generative AI."</p>
+                            </div>
+                        </div>
+
+                        <!-- Item 3 (근무 중) -->
+                        <div class="exp-item">
+                            <div class="exp-meta">
+                                <span class="exp-tag active-work">근무 중</span>
+                                <span class="exp-date lang-ko">1년 6개월째 근무 중</span>
+                                <span class="exp-date lang-en">1 Year 6 Months</span>
+                            </div>
+                            <div class="exp-body">
+                                <h4>
+                                    <span class="lang-ko">방과후 강사</span>
+                                    <span class="lang-en">After-school Instructor</span>
+                                </h4>
+                                <p class="lang-ko">"아이들과의 소통을 통해 눈높이에 맞는 전달력과 교육 역량을 키워왔습니다."</p>
+                                <p class="lang-en">"Have developed eye-level delivery and educational capabilities through teaching and communicating with children."</p>
+                            </div>
+                        </div>
+
+                        <!-- Item 4 (과거) -->
+                        <div class="exp-item">
+                            <div class="exp-meta">
+                                <span class="exp-tag past">과거</span>
+                                <span class="exp-date lang-ko">3년 근무</span>
+                                <span class="exp-date lang-en">3 Years</span>
+                            </div>
+                            <div class="exp-body">
+                                <h4>
+                                    <span class="lang-ko">스타벅스 코리아 슈퍼바이저</span>
+                                    <span class="lang-en">Starbucks Korea Supervisor</span>
+                                </h4>
+                                <p class="lang-ko">"고객 응대 및 팀 운영 경험을 통해 탁월한 커뮤니케이션 역량과 문제 해결 능력을 갖추었습니다."</p>
+                                <p class="lang-en">"Built strong communication skills and problem-solving abilities through customer service and team management."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 학력 & 자격증 탭 패널 (수료과정 & 자격증) -->
+                <div class="tab-panel" id="education">
+                    <ul class="about-list bullet-list education-list">
+                        <li>
+                            <span class="lang-ko">2026 천안여성인력개발센터 디지털마케팅 53일 과정 수료</span>
+                            <span class="lang-en">2026 Completed 53-day Digital Marketing Course, Cheonan Women's Human Resources Development Center</span>
+                        </li>
+                        <li>
+                            <span class="lang-ko">2025 ITQ 파워포인트 자격증</span>
+                            <span class="lang-en">2025 ITQ PowerPoint Certificate</span>
+                        </li>
+                        <li>
+                            <span class="lang-ko">2024년 엔트리 자격증</span>
+                            <span class="lang-en">2024 Entry (Block Coding) Certificate</span>
+                        </li>
+                        <li>
+                            <span class="lang-ko">2024 천안여성인력개발센터 파이썬 3개월 과정 수료</span>
+                            <span class="lang-en">2024 Completed 3-month Python Course, Cheonan Women's Human Resources Development Center</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 3. 보유 기술 탭 패널 -->
+                <div class="tab-panel" id="skills">
+                    <div class="skills-tab-grid">
+                        <div class="skills-category">
+                            <h4 class="skills-cat-title">
+                                <span class="lang-ko">AI 툴</span>
+                                <span class="lang-en">AI Tools</span>
+                            </h4>
+                            <div class="skills-badges">
+                                <span class="skill-badge ai">ChatGPT</span>
+                                <span class="skill-badge ai">Claude</span>
+                                <span class="skill-badge ai">Gemini</span>
+                                <span class="skill-badge ai">Google Flow</span>
+                                <span class="skill-badge ai">Magnific AI</span>
+                                <span class="skill-badge ai">Vrew</span>
+                                <span class="skill-badge ai">CapCut</span>
+                                <span class="skill-badge ai">Canva</span>
+                                <span class="skill-badge ai">HeyGen</span>
+                            </div>
+                        </div>
+
+                        <div class="skills-category">
+                            <h4 class="skills-cat-title">
+                                <span class="lang-ko">마케팅</span>
+                                <span class="lang-en">Marketing</span>
+                            </h4>
+                            <div class="skills-badges">
+                                <span class="skill-badge marketing">블로그 운영</span>
+                                <span class="skill-badge marketing">SNS 콘텐츠 제작</span>
+                                <span class="skill-badge marketing">광고 기획</span>
+                                <span class="skill-badge marketing">카드뉴스 제작</span>
+                                <span class="skill-badge marketing">AI 그림 동화책 제작</span>
+                            </div>
+                        </div>
+
+                        <div class="skills-category">
+                            <h4 class="skills-cat-title">
+                                <span class="lang-ko">개발</span>
+                                <span class="lang-en">Development</span>
+                            </h4>
+                            <div class="skills-badges">
+                                <span class="skill-badge dev">HTML / CSS / JS</span>
+                                <span class="skill-badge dev">안티그래비티 바이브코딩</span>
+                            </div>
+                        </div>
+
+                        <div class="skills-category">
+                            <h4 class="skills-cat-title">
+                                <span class="lang-ko">기타</span>
+                                <span class="lang-en">Other</span>
+                            </h4>
+                            <div class="skills-badges">
+                                <span class="skill-badge other">엔트리</span>
+                                <span class="skill-badge other">ITQ 파워포인트</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
         <section id="portfolio" class="links-section">
             <h2 class="section-title">My Work</h2>
             <div class="links-grid">
-                <a href="videos.html" class="link-card">
-                    <img src="https://cdn.simpleicons.org/youtube/ff0000" width="40" height="40" alt="YouTube"
-                        style="margin-right: 1.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));">
+                <a href="videos.html" class="link-card reveal">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="#FF0000" style="margin-right:1.5rem;flex-shrink:0;"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                     <div class="link-text">
                         <h3>Watch</h3>
-                        <p>영상 포트폴리오</p>
+                        <p class="lang-ko">영상 포트폴리오</p>
+                        <p class="lang-en">Video Portfolio</p>
                     </div>
                     <span class="arrow">→</span>
                 </a>
 
-                <a href="https://blog.naver.com/cool89kr" target="_blank" rel="noopener noreferrer" class="link-card">
-                    <img src="https://cdn.simpleicons.org/naver/03c75a" width="40" height="40" alt="Naver Blog"
-                        style="margin-right: 1.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));">
+                <a href="blog.html" class="link-card reveal">
+                    <svg class="card-icon" viewBox="0 0 24 24" width="40" height="40" xmlns="http://www.w3.org/2000/svg" style="margin-right:1.5rem;flex-shrink:0;color:#03C75A;"><path d="M16.273 2.25h5.477V21.75h-5.477l-8.07-11.604v11.604H2.727V2.25h5.477l8.07 11.603V2.25Z" fill="currentColor"/></svg>
                     <div class="link-text">
                         <h3>Read</h3>
-                        <p>블로그 방문하기</p>
+                        <p class="lang-ko">블로그 방문하기</p>
+                        <p class="lang-en">Visit Blog</p>
                     </div>
                     <span class="arrow">→</span>
                 </a>
 
-                <a href="javascript:void(0)" class="link-card" style="cursor: default;">
-                    <img src="https://cdn.simpleicons.org/instagram/e4405f" width="40" height="40" alt="Instagram"
-                        style="margin-right: 1.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));">
+                <a href="storybook.html" class="link-card reveal">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:1.5rem;flex-shrink:0;color:#8b5a2b;">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
                     <div class="link-text">
-                        <h3>Connect</h3>
-                        <p>인스타그램 팔로우</p>
+                        <h3>Write</h3>
+                        <p class="lang-ko">AI 동화책 제작</p>
+                        <p class="lang-en">AI Storybook Production</p>
                     </div>
                     <span class="arrow">→</span>
                 </a>
 
-                <a href="javascript:void(0)" class="link-card" style="cursor: default;">
-                    <img src="https://cdn.simpleicons.org/threads/000000" width="40" height="40" alt="Threads"
-                        style="margin-right: 1.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));">
+                <a href="content.html" class="link-card reveal">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="url(#instagram-grad-create)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:1.5rem;flex-shrink:0;">
+                        <defs>
+                            <linearGradient id="instagram-grad-create" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#fdf497" />
+                                <stop offset="28%" stop-color="#fd5949" />
+                                <stop offset="75%" stop-color="#d6249f" />
+                                <stop offset="100%" stop-color="#285AEB" />
+                            </linearGradient>
+                        </defs>
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                    <div class="link-text">
+                        <h3>Create</h3>
+                        <p class="lang-ko">SNS 콘텐츠 & 광고 기획</p>
+                        <p class="lang-en">SNS Content & Ad Planning</p>
+                    </div>
+                    <span class="arrow">→</span>
+                </a>
+
+                <a href="https://www.instagram.com/slowlog89/" target="_blank" rel="noopener noreferrer" class="link-card reveal">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="url(#instagram-grad-connect)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:1.5rem;flex-shrink:0;">
+                        <defs>
+                            <linearGradient id="instagram-grad-connect" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#fdf497" />
+                                <stop offset="28%" stop-color="#fd5949" />
+                                <stop offset="75%" stop-color="#d6249f" />
+                                <stop offset="100%" stop-color="#285AEB" />
+                            </linearGradient>
+                        </defs>
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
                     <div class="link-text">
                         <h3>Connect</h3>
-                        <p>쓰레드 팔로우</p>
+                        <p class="lang-ko">인스타그램 팔로우</p>
+                        <p class="lang-en">Follow on Instagram</p>
+                    </div>
+                    <span class="arrow">→</span>
+                </a>
+
+                <a href="https://www.threads.com/@jumal_mom" target="_blank" rel="noopener noreferrer" class="link-card reveal">
+                    <i class="fa-brands fa-threads" style="font-size: 40px; width: 40px; height: 40px; margin-right: 1.5rem; flex-shrink: 0; color: var(--text-main); display: inline-flex; align-items: center; justify-content: center;"></i>
+                    <div class="link-text">
+                        <h3>Connect</h3>
+                        <p class="lang-ko">쓰레드 팔로우</p>
+                        <p class="lang-en">Follow on Threads</p>
                     </div>
                     <span class="arrow">→</span>
                 </a>
             </div>
         </section>
+
+        <section class="apps-section">
+            <h2 class="section-title">
+                <span class="lang-ko">Build</span>
+                <span class="lang-en">Build</span>
+            </h2>
+            <div class="apps-grid">
+                <a href="academy.html" target="_blank" class="app-card reveal">
+                    <span class="app-icon">🏫</span>
+                    <h3 class="lang-ko">학원비 결제 관리</h3>
+                    <h3 class="lang-en">Academy Fee Manager</h3>
+                    <p class="lang-ko">매달 학원비 납부 현황을 관리하는 앱. 항목 추가·삭제, 납부 체크, 영수증 이미지 첨부, 월별 히스토리 기능 포함.</p>
+                    <p class="lang-en">An app to manage monthly academy fee payments with check-off, image upload, and history features.</p>
+                    <span class="app-tag">HTML / CSS / JS · 바이브코딩</span>
+                </a>
+                <a href="to_do.html" target="_blank" class="app-card reveal">
+                    <span class="app-icon">✅</span>
+                    <h3 class="lang-ko">My Todo Mate</h3>
+                    <h3 class="lang-en">My Todo Mate</h3>
+                    <p class="lang-ko">매일 루틴·오늘 할 일·내일 미리 적기 3가지 카테고리로 구성된 투두 앱. 꾹 누르면 내일로 이동, 자동 날짜 이월 기능 포함.</p>
+                    <p class="lang-en">A todo app with daily routine, today's tasks, and tomorrow's prep. Long-press to defer tasks, with auto daily rollover.</p>
+                    <span class="app-tag">HTML / CSS / JS · 바이브코딩</span>
+                </a>
+            </div>
+        </section>
+
         <section id="contact" class="contact-section">
             <h2 class="section-title">Get in Touch</h2>
-            <div class="contact-card">
+            <div class="contact-card reveal">
                 <div class="contact-info">
-                    <h3>연락을 <br class="mobile-br">기다립니다!</h3>
-                    <p>협업 문의, 커피챗 등 언제든 편하게 <br class="mobile-br">이메일(cool89kr@naver.com)로 연락 주세요.</p>
+                    <h3 class="lang-ko">연락을 <br class="mobile-br">기다립니다!</h3>
+                    <h3 class="lang-en">Let's Connect!</h3>
+                    <p class="lang-ko">협업 문의, 커피챗 등 언제든 편하게 <br class="mobile-br">이메일(cool89kr@naver.com)로 연락 주세요.</p>
+                    <p class="lang-en">Feel free to contact me via email (cool89kr@naver.com) for collaboration or a coffee chat.</p>
                 </div>
                 <div class="contact-action">
-                    <a href="javascript:void(0)" onclick="copyEmail(this)" class="email-btn">
+                    <a href="mailto:cool89kr@naver.com" class="email-btn">
                         <span class="email-icon">✉️</span>
-                        <span class="btn-text">이메일 주소 복사</span>
+                        <span class="btn-text lang-ko">이메일 보내기</span>
+                        <span class="btn-text lang-en">Send Email</span>
                     </a>
                 </div>
             </div>

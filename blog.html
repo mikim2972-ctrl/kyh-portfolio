@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김유현 - 블로그 운영 기록</title>
+    <!-- Pretendard Font for Korean/English -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="cursor-effect" id="cursor"></div>
+
+    <!-- 우측 스크롤 인디케이터 바 -->
+    <div class="scroll-progress-ticks" id="scroll-progress-ticks">
+        <div class="tick" data-index="0"></div>
+        <div class="tick" data-index="1"></div>
+        <div class="tick" data-index="2"></div>
+        <div class="tick" data-index="3"></div>
+        <div class="tick" data-index="4"></div>
+        <div class="tick" data-index="5"></div>
+        <div class="tick" data-index="6"></div>
+        <div class="tick" data-index="7"></div>
+        <div class="tick" data-index="8"></div>
+        <div class="tick" data-index="9"></div>
+    </div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">KYH</a>
+        <div class="nav-links">
+            <a href="index.html#portfolio" class="nav-item"><span class="lang-ko">← 돌아가기</span><span class="lang-en">← Go Back</span></a>
+        </div>
+        <div class="lang-selector">
+            <button class="lang-btn active" data-lang="ko">🇰🇷</button>
+            <button class="lang-btn" data-lang="en">🇺🇸</button>
+            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle theme">
+                <svg class="theme-icon moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                <svg class="theme-icon sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="content-section">
+            <div class="page-header">
+                <h1 class="page-title">Read</h1>
+                <p class="page-subtitle">
+                    <span class="lang-ko">네이버 블로그 운영 기록입니다.</span>
+                    <span class="lang-en">My Naver Blog growth & operation record.</span>
+                </p>
+            </div>
+
+            <!-- 성장 지표 섹션 (카드 3개 가로 배열) -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-emoji">📅</span>
+                    <span class="stat-label lang-ko">개설 시기</span>
+                    <span class="stat-label lang-en">Started Since</span>
+                    <span class="stat-value lang-ko">2026년 3월</span>
+                    <span class="stat-value lang-en">March 2026</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-emoji">📈</span>
+                    <span class="stat-label lang-ko">최고 주간 방문자</span>
+                    <span class="stat-label lang-en">Peak Weekly Visitors</span>
+                    <span class="stat-value lang-ko">322명</span>
+                    <span class="stat-value lang-en">322</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-emoji">⏱</span>
+                    <span class="stat-label lang-ko">성장 기간</span>
+                    <span class="stat-label lang-en">Growth Period</span>
+                    <span class="stat-value lang-ko">10주</span>
+                    <span class="stat-value lang-en">10 Weeks</span>
+                </div>
+            </div>
+
+            <!-- 통계 이미지 섹션 -->
+            <div class="stats-img-card">
+                <h3 class="stats-img-title">
+                    <span class="lang-ko">방문자 통계</span>
+                    <span class="lang-en">Visitor Statistics</span>
+                </h3>
+                <div class="stats-img-wrapper">
+                    <img src="blog-stats.png" alt="방문자 통계 그래프">
+                </div>
+                <p class="stats-img-desc lang-ko">
+                    3월 개설 후 10주 만에 주간 방문자 0 → 322명 달성
+                </p>
+                <p class="stats-img-desc lang-en">
+                    Grew weekly visitors from 0 to 322 in just 10 weeks since launching in March
+                </p>
+            </div>
+
+            <!-- 블로그 바로가기 버튼 -->
+            <div class="blog-btn-wrapper">
+                <a href="https://blog.naver.com/cool89kr" target="_blank" rel="noopener noreferrer" class="blog-go-btn">
+                    <span class="btn-text lang-ko">블로그 방문하기 →</span>
+                    <span class="btn-text lang-en">Visit Blog →</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Kim Yuhyun. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

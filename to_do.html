@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Todo Mate</title>
+    <style>
+        :root {
+            --main-purple: #8B5CF6;
+            --main-pink: #EC4899;
+            --main-green: #10B981;
+            --main-blue: #3B82F6;
+            --bg-color: #F9FAFB;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            margin: 0;
+            min-height: 100vh;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            padding: 25px;
+            min-height: 90vh;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .header { display: flex; align-items: center; margin-bottom: 25px; pointer-events: none; }
+        .profile-img { width: 55px; height: 55px; border-radius: 50%; background: #FFD6E0; margin-right: 15px; }
+        .date-title { font-size: 1.4rem; font-weight: bold; }
+
+        .category-header { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; margin-bottom: 15px; }
+        .category-badge { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; }
+        .routine-badge { color: var(--main-blue); background: #DBEAFE; }
+        .todo-badge { color: var(--main-purple); background: #F3E8FF; }
+        .tomorrow-badge { color: var(--main-green); background: #D1FAE5; }
+
+        .add-btn {
+            background: #eee; border: none; border-radius: 50%; width: 32px; height: 32px; 
+            cursor: pointer; color: #666; font-size: 20px; display: flex; align-items: center; justify-content: center;
+        }
+
+        .todo-item { 
+            display: flex; align-items: center; margin-bottom: 18px; cursor: pointer; 
+            transition: transform 0.1s, background-color 0.2s;
+            border-radius: 10px;
+        }
+        .todo-item:active { transform: scale(0.98); background-color: #f9f9f9; }
+
+        .checkbox {
+            width: 24px; height: 24px; border-radius: 8px; border: 2px solid #eee; 
+            margin-right: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+
+        .todo-item.done .checkbox { background-color: var(--main-purple); border-color: var(--main-purple); color: white; }
+        .todo-item.done span { text-decoration: line-through; color: #ccc; }
+        .delete-item { margin-left: auto; color: #ffcccc; font-size: 12px; border: none; background: none; padding: 5px; cursor: pointer; }
+
+        .input-group {
+            margin-top: auto; padding-top: 20px; border-top: 1px solid #f0f0f0; 
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        input { 
+            flex: 1; padding: 12px; border: 1px solid #eee; border-radius: 12px; outline: none; font-size: 16px; 
+            -webkit-user-select: text; user-select: text;
+        }
+        
+        .save-btn { padding: 12px 15px; color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 14px; display: none; }
+
+        #toast {
+            position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 25px;
+            font-size: 13px; display: none; z-index: 100; pointer-events: none;
+        }
+    </style>
+</head>
+<body onclick="closeInputMode()">
+
+<div class="phone-container" onclick="handleContainerClick(event)">
+    <div id="toast">내일로 이동되었습니다!</div>
+    
+    <div class="header">
+        <div class="profile-img"></div>
+        <div>
+            <div class="date-title" id="current-date"></div>
+            <div style="font-size: 13px; color: #888;">나만의 투두 리스트</div>
+        </div>
+    </div>
+
+    <div class="category-header">
+        <span class="category-badge routine-badge">🔄 매일 루틴</span>
+        <button class="add-btn" onclick="openInput('routine', event)">+</button>
+    </div>
+    <div id="routine-list"></div>
+
+    <div class="category-header" style="margin-top: 25px;">
+        <span class="category-badge todo-badge">📝 오늘의 할 일</span>
+        <button class="add-btn" onclick="openInput('today', event)">+</button>
+    </div>
+    <div id="todo-list"></div>
+
+    <div class="category-header" style="margin-top: 25px;">
+        <span class="category-badge tomorrow-badge">📅 내일 미리 적기</span>
+        <button class="add-btn" onclick="openInput('tomorrow', event)">+</button>
+    </div>
+    <div id="tomorrow-list"></div>
+
+    <div class="input-group" onclick="event.stopPropagation()">
+        <input type="text" id="todo-input" placeholder="할 일을 입력하세요..." onkeypress="handleEnter(event)">
+        <button id="save-btn" class="save-btn" onclick="saveData()">저장하기</button>
+    </div>
+</div>
+
+<script>
+    // 1. 날짜 설정 및 자동 이월 시스템
+    const dateElement = document.getElementById('current-date');
+    const now = new Date();
+    const todayStr = now.getFullYear() + ". " + (now.getMonth() + 1) + ". " + now.getDate() + ".";
+    dateElement.innerText = todayStr;
+
+    let routines = JSON.parse(localStorage.getItem('myRoutines')) || ["물 1L 마시기"];
+    let routineStatus = JSON.parse(localStorage.getItem('routineStatus')) || routines.map(() => false);
+    let todos = JSON.parse(localStorage.getItem('myTodos')) || [];
+    let tomorrowTodos = JSON.parse(localStorage.getItem('tomorrowTodos')) || [];
+
+    const lastDate = localStorage.getItem('lastAccessDate');
+    if (lastDate && lastDate !== todayStr) {
+        routineStatus = routines.map(() => false); // 루틴 리셋
+        const unfinishedTodos = todos.filter(t => !t.done); // 못한 일만 추출
+        todos = [...unfinishedTodos, ...tomorrowTodos]; // 못한 일 + 내일 할 일 합치기
+        tomorrowTodos = [];
+        localStorage.setItem('lastAccessDate', todayStr);
+    } else {
+        localStorage.setItem('lastAccessDate', todayStr);
+    }
+
+    const todoInput = document.getElementById('todo-input');
+    const saveBtn = document.getElementById('save-btn');
+    let currentMode = 'today';
+
+    // 2. 꾹 누르기(Long Press) 기능
+    let longPressTimer;
+    function startLongPress(index) {
+        longPressTimer = setTimeout(() => moveToTomorrow(index), 600);
+    }
+    function cancelLongPress() { clearTimeout(longPressTimer); }
+
+    function moveToTomorrow(index) {
+        const item = todos[index];
+        tomorrowTodos.push({ text: item.text, done: false });
+        todos.splice(index, 1);
+        showToast();
+        render();
+    }
+
+    function showToast() {
+        const toast = document.getElementById('toast');
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 1500);
+    }
+
+    // 3. 입력 모드 관리
+    function openInput(mode, e) {
+        if(e) e.stopPropagation();
+        currentMode = mode;
+        saveBtn.style.display = 'block';
+        const colors = { routine: 'var(--main-blue)', today: 'var(--main-purple)', tomorrow: 'var(--main-green)' };
+        const placeholders = { routine: '새 루틴 입력', today: '오늘 할 일 입력', tomorrow: '내일 할 일 입력' };
+        
+        todoInput.placeholder = placeholders[mode];
+        todoInput.style.borderColor = colors[mode];
+        saveBtn.style.backgroundColor = colors[mode];
+        todoInput.focus();
+    }
+
+    function closeInputMode() {
+        todoInput.blur();
+        todoInput.value = "";
+        todoInput.placeholder = "할 일을 입력하세요...";
+        todoInput.style.borderColor = "#eee";
+        saveBtn.style.display = 'none';
+    }
+
+    function handleContainerClick(e) {
+        e.stopPropagation();
+        if (e.target.classList.contains('phone-container')) closeInputMode();
+    }
+
+    function saveData() {
+        const text = todoInput.value.trim();
+        if (!text) return;
+        if (currentMode === 'routine') { routines.push(text); routineStatus.push(false); }
+        else if (currentMode === 'today') { todos.push({ text, done: false }); }
+        else { tomorrowTodos.push({ text, done: false }); }
+        todoInput.value = "";
+        render();
+    }
+
+    function handleEnter(e) { if(e.key === 'Enter') saveData(); }
+
+    // 4. 렌더링 시스템
+    function render() {
+        document.getElementById('routine-list').innerHTML = routines.map((text, i) => `
+            <div class="todo-item ${routineStatus[i] ? 'done' : ''}" onclick="toggleRoutine(${i})">
+                <div class="checkbox">${routineStatus[i] ? '✓' : ''}</div>
+                <span>${text}</span>
+                <button class="delete-item" onclick="deleteRoutine(${i}, event)">삭제</button>
+            </div>
+        `).join('');
+
+        document.getElementById('todo-list').innerHTML = todos.map((todo, i) => `
+            <div class="todo-item ${todo.done ? 'done' : ''}" 
+                 onclick="toggleTodo(${i})"
+                 onmousedown="startLongPress(${i})" onmouseup="cancelLongPress()" onmouseleave="cancelLongPress()"
+                 ontouchstart="startLongPress(${i})" ontouchend="cancelLongPress()">
+                <div class="checkbox">${todo.done ? '✓' : ''}</div>
+                <span>${todo.text}</span>
+                <button class="delete-item" onclick="deleteTodo(${i}, event)">삭제</button>
+            </div>
+        `).join('');
+
+        document.getElementById('tomorrow-list').innerHTML = tomorrowTodos.map((todo, i) => `
+            <div class="todo-item">
+                <div class="checkbox" style="background: #f9f9f9; border-style: dashed;"></div>
+                <span>${todo.text}</span>
+                <button class="delete-item" onclick="deleteTomorrowTodo(${i}, event)">삭제</button>
+            </div>
+        `).join('');
+
+        localStorage.setItem('myRoutines', JSON.stringify(routines));
+        localStorage.setItem('routineStatus', JSON.stringify(routineStatus));
+        localStorage.setItem('myTodos', JSON.stringify(todos));
+        localStorage.setItem('tomorrowTodos', JSON.stringify(tomorrowTodos));
+    }
+
+    function toggleRoutine(index) { routineStatus[index] = !routineStatus[index]; render(); }
+    function deleteRoutine(index, e) { e.stopPropagation(); if(confirm("삭제할까요?")) { routines.splice(index,1); routineStatus.splice(index,1); render(); } }
+    function toggleTodo(index) { todos[index].done = !todos[index].done; render(); }
+    function deleteTodo(index, e) { e.stopPropagation(); cancelLongPress(); todos.splice(index, 1); render(); }
+    function deleteTomorrowTodo(index, e) { e.stopPropagation(); tomorrowTodos.splice(index, 1); render(); }
+
+    render();
+</script>
+</body>
+</html>
