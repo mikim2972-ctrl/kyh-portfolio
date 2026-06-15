@@ -231,6 +231,27 @@ body {
     border: 1px solid rgba(0,0,0,0.02);
 }
 
+.link-card.featured {
+    grid-column: span 2;
+    background: linear-gradient(145deg, rgba(215, 196, 165, 0.12), var(--card-bg));
+    border: 1px solid rgba(215, 196, 165, 0.3);
+}
+
+.link-card.featured:hover {
+    background: linear-gradient(145deg, rgba(215, 196, 165, 0.22), var(--hover-bg));
+    border-color: rgba(215, 196, 165, 0.5);
+}
+
+body.dark-mode .link-card.featured {
+    background: linear-gradient(145deg, rgba(229, 213, 188, 0.08), var(--card-bg));
+    border-color: rgba(229, 213, 188, 0.2);
+}
+
+body.dark-mode .link-card.featured:hover {
+    background: linear-gradient(145deg, rgba(229, 213, 188, 0.15), var(--hover-bg));
+    border-color: rgba(229, 213, 188, 0.35);
+}
+
 .link-card:hover {
     transform: translateY(-5px);
     background: var(--hover-bg);
@@ -598,6 +619,7 @@ body.lang-en .lang-ko { display: none; }
 /* ===== About Me 섹션 ===== */
 .about-section {
     padding: 3rem 0 2rem;
+    min-height: 680px; /* 탭 전환 시 하단 레이아웃 점핑 방지 (섹션 레벨) */
 }
 
 .about-card {
@@ -817,9 +839,11 @@ body.lang-en .lang-ko { display: none; }
     justify-content: center;
     cursor: pointer;
     z-index: 10;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     color: var(--text-main);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    opacity: 0; /* 마우스 포인트 접근 전 기본 상태 숨김 */
+    pointer-events: none;
 }
 
 .slider-btn:hover {
@@ -837,17 +861,30 @@ body.lang-en .lang-ko { display: none; }
 }
 
 .prev-btn {
-    left: 1.25rem;
+    left: 0.5rem; /* 살짝 안쪽에 배치 */
 }
 .prev-btn:hover svg {
     transform: translateX(-2px);
 }
 
 .next-btn {
-    right: 1.25rem;
+    right: 0.5rem; /* 살짝 안쪽에 배치 */
 }
 .next-btn:hover svg {
     transform: translateX(2px);
+}
+
+/* 마우스 포인트가 가까이 가면(호버) 양쪽 방향 화살표 나타남 */
+.slider-wrapper:hover .prev-btn {
+    left: 1.25rem;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.slider-wrapper:hover .next-btn {
+    right: 1.25rem;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* 페이지네이션 - 미니멀 글래스모피즘 */
@@ -1092,6 +1129,7 @@ body.lang-en .lang-ko { display: none; }
     /* About Me 섹션 */
     .about-section {
         padding: 2.5rem 0 1.5rem;
+        min-height: 900px; /* 모바일 탭 전환 시 하단 레이아웃 점핑 방지 (섹션 레벨) */
     }
     
     .about-card {
@@ -1564,13 +1602,13 @@ body.dark-mode .tab-btn.active {
 .experience-list {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
 .exp-item {
     display: flex;
-    gap: 2.5rem;
-    padding-bottom: 2rem;
+    gap: 1.8rem;
+    padding-bottom: 1.25rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
@@ -1584,17 +1622,17 @@ body.dark-mode .exp-item {
 }
 
 .exp-meta {
-    flex: 0 0 160px;
+    flex: 0 0 135px;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
     align-items: flex-start;
 }
 
 .exp-tag {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    padding: 0.25rem 0.65rem;
+    padding: 0.2rem 0.55rem;
     border-radius: 6px;
     letter-spacing: -0.01em;
 }
@@ -1632,7 +1670,7 @@ body.dark-mode .exp-tag.active-work {
 }
 
 .exp-date {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
     font-weight: 500;
 }
@@ -1642,16 +1680,16 @@ body.dark-mode .exp-tag.active-work {
 }
 
 .exp-body h4 {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: var(--text-main);
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.3rem;
 }
 
 .exp-body p {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     color: var(--text-muted);
-    line-height: 1.6;
+    line-height: 1.55;
     font-style: italic;
 }
 
@@ -1969,6 +2007,22 @@ body.dark-mode .qr-dropdown {
 
 /* ===== Mobile Responsive Overrides (Fixed Ordering) ===== */
 @media (max-width: 768px) {
+    .link-card.featured {
+        grid-column: span 1;
+    }
+
+    /* 모바일에서는 호버가 없으므로 슬라이더 화살표를 항상 표시 */
+    .slider-btn {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+    .prev-btn {
+        left: 1rem !important;
+    }
+    .next-btn {
+        right: 1rem !important;
+    }
+
     /* Hide QR banner on mobile devices */
     .qr-floating-banner {
         display: none !important;
@@ -2007,8 +2061,8 @@ body.dark-mode .qr-dropdown {
     /* 2. experience list spacing & layout */
     .exp-item {
         flex-direction: column !important;
-        gap: 0.75rem !important;
-        padding-bottom: 1.5rem !important;
+        gap: 0.5rem !important;
+        padding-bottom: 1rem !important;
     }
     
     .exp-meta {
@@ -2017,16 +2071,16 @@ body.dark-mode .qr-dropdown {
         height: auto !important;
         flex-direction: row !important;
         align-items: center !important;
-        gap: 0.8rem !important;
+        gap: 0.5rem !important;
     }
     
     .exp-body h4 {
-        font-size: 1.05rem !important;
-        margin-bottom: 0.4rem !important;
+        font-size: 0.95rem !important;
+        margin-bottom: 0.25rem !important;
     }
     
     .exp-body p {
-        font-size: 0.88rem !important;
-        line-height: 1.5 !important;
+        font-size: 0.8rem !important;
+        line-height: 1.45 !important;
     }
 }
